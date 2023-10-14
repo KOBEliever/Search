@@ -7,12 +7,10 @@
         size="large"
         @search="onSearch"
     />
-
     <MyDivider />
-
     <a-tabs v-model:activeKey="activeKey" @change="onTabChange">
       <a-tab-pane key="post" tab="Post">
-        <PostList />
+        <PostList :post-list="postList"/>
       </a-tab-pane>
       <a-tab-pane key="picture" tab="Picture">
         <PictureList />
@@ -32,6 +30,7 @@ import PictureList from "@/components/PictureList.vue";
 import UserList from "@/components/UserList.vue";
 import MyDivider from "@/components/MyDivider.vue";
 import {useRoute, useRouter} from "vue-router";
+import myAxios from "@/plugins/MyAxios";
 
 const router = useRouter()
 const route = useRoute();
@@ -41,8 +40,11 @@ const initSearchParams = {
   pageSize: 10,
   pageNum: 1,
 };
+const postList = ref([]);
 const searchParam = ref(initSearchParams)
-
+myAxios.post('post/list/page/vo',{}).then((res:any) => {
+  postList.value = res.records;
+})
 watchEffect(() => {
   searchParam.value = {
     ...initSearchParams,
