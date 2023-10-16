@@ -32,7 +32,7 @@ import MyDivider from "@/components/MyDivider.vue";
 import {useRoute, useRouter} from "vue-router";
 import myAxios from "@/plugins/MyAxios";
 
-const router = useRouter()
+const router = useRouter();
 const route = useRoute();
 const activeKey = route.params.category;
 const initSearchParams = {
@@ -41,31 +41,47 @@ const initSearchParams = {
   pageNum: 1,
 };
 const postList = ref([]);
-const searchParam = ref(initSearchParams)
-myAxios.post('post/list/page/vo',{}).then((res:any) => {
-  postList.value = res.records;
-})
 const pictureList = ref([]);
-myAxios.post('picture/list/page/vo',{}).then((res:any) => {
-  pictureList.value = res.records;
+const searchParam = ref(initSearchParams);
+/**
+ *
+ */
+const loadData = ((params:any) => {
+  const postQuery = {
+    ...params,
+    searchText: params.text,
+  };
+  myAxios.post('post/list/page/vo',postQuery).then((res:any) => {
+    postList.value = res.records;
+  })
+  const pictureQuery = {
+    ...params,
+    searchText: params.text,
+  };
+  myAxios.post('picture/list/page/vo',pictureQuery).then((res:any) => {
+    pictureList.value = res.records;
+  })
 })
 watchEffect(() => {
   searchParam.value = {
     ...initSearchParams,
     text: route.query.text,
   }as any
-})
+});
+
+loadData(initSearchParams);
  const onSearch = (value : string) => {
    alert(value);
    router.push({
      query : searchParam.value
-   })
+   });
+   loadData(searchParam.value);
  };
 
 const onTabChange = (key : string) => {
   router.push({
     path : `/${key}`,
-    query : searchParam.value
+    query : searchParam.value,
   })
 }
 </script>
