@@ -46,7 +46,7 @@ const searchParam = ref(initSearchParams);
 /**
  *
  */
-const loadData = ((params:any) => {
+const loadDataOld = ((params:any) => {
   const postQuery = {
     ...params,
     searchText: params.text,
@@ -62,6 +62,16 @@ const loadData = ((params:any) => {
     pictureList.value = res.records;
   })
 })
+const loadData = ((params:any) => {
+  const query = {
+    ...params,
+    searchText: params.text,
+  };
+  myAxios.post('search/all',query).then((res:any) => {
+    postList.value = res.postList;
+    pictureList.value = res.pictureList;
+  })
+})
 watchEffect(() => {
   searchParam.value = {
     ...initSearchParams,
@@ -71,7 +81,6 @@ watchEffect(() => {
 
 loadData(initSearchParams);
  const onSearch = (value : string) => {
-   alert(value);
    router.push({
      query : searchParam.value
    });
