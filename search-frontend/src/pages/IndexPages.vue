@@ -13,7 +13,7 @@
         <PostList :post-list="postList"/>
       </a-tab-pane>
       <a-tab-pane key="picture" tab="Picture">
-        <PictureList />
+        <PictureList :picture-list="pictureList" />
       </a-tab-pane>
       <a-tab-pane key="user" tab="User">
         <UserList />
@@ -44,6 +44,10 @@ const postList = ref([]);
 const searchParam = ref(initSearchParams)
 myAxios.post('post/list/page/vo',{}).then((res:any) => {
   postList.value = res.records;
+})
+const pictureList = ref([]);
+myAxios.post('picture/list/page/vo',{}).then((res:any) => {
+  pictureList.value = res.records;
 })
 watchEffect(() => {
   searchParam.value = {
