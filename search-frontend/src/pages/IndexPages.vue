@@ -111,6 +111,7 @@ const loadData = (params: any) => {
 
 const searchParams = ref(initSearchParams);
 
+//onSearch、onTabChange触发改变url，watchEffect监听到url改变，然后改变searchParams，随即触发搜索
 watchEffect(() => {
   searchParams.value = {
     ...initSearchParams,
